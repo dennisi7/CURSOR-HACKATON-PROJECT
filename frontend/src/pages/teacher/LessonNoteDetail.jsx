@@ -85,6 +85,9 @@ export default function LessonNoteDetail() {
         action={
           <div className="flex items-center gap-2">
             <StatusBadge status={note.status} />
+            <Link to={`/lesson-notes/${id}/print`} className="btn-secondary">
+              Print
+            </Link>
             <Link to={`/teacher/lesson-notes/${id}/edit`} className="btn-secondary">
               Edit
             </Link>

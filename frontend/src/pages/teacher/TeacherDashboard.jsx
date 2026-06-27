@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api, { apiError } from '../../api/client.js';
-import { PageHeader, StatCard, Spinner, Alert, StatusBadge } from '../../components/ui.jsx';
+import {
+  PageHeader,
+  StatCard,
+  Spinner,
+  Alert,
+  StatusBadge,
+  ProgressBar,
+} from '../../components/ui.jsx';
 
 export default function TeacherDashboard() {
   const [stats, setStats] = useState(null);
@@ -50,6 +57,73 @@ export default function TeacherDashboard() {
           </Link>
         </div>
       </div>
+
+      {/* Coverage + participation reminders */}
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        {stats.coverage_summary && (
+          <div className="card">
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">
+              Syllabus coverage
+            </h2>
+            <p className="mb-1 font-medium text-gray-800">
+              {stats.coverage_summary.class_name}
+            </p>
+            <ProgressBar percent={stats.coverage_summary.coverage_percent} />
+            <Link
+              to="/teacher/syllabus"
+              className="mt-2 inline-block text-sm font-semibold text-brand-700"
+            >
+              View all coverage →
+            </Link>
+          </div>
+        )}
+
+        {stats.participation_reminders?.length > 0 && (
+          <div className="card">
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">
+              Participation reminders
+            </h2>
+            <p className="text-sm text-gray-600">
+              No participation logged this week for:
+            </p>
+            <ul className="mt-1 list-inside list-disc text-sm text-gray-700">
+              {stats.participation_reminders.map((c, i) => (
+                <li key={i}>{c}</li>
+              ))}
+            </ul>
+            <Link
+              to="/teacher/participation"
+              className="mt-2 inline-block text-sm font-semibold text-brand-700"
+            >
+              Log participation →
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {/* Recent notices */}
+      {stats.recent_notices?.length > 0 && (
+        <div className="mt-6">
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">
+            Recent notices
+          </h2>
+          <div className="space-y-2">
+            {stats.recent_notices.map((n) => (
+              <Link
+                key={n.id}
+                to="/teacher/notices"
+                className="card flex items-center justify-between py-3 transition hover:shadow-md"
+              >
+                <span className="font-medium text-gray-800">
+                  {n.is_pinned ? '📌 ' : ''}
+                  {n.title}
+                </span>
+                <span className="text-xs text-gray-400">{n.audience}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-6">
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">

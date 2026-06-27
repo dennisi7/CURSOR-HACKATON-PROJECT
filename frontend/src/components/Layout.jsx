@@ -2,27 +2,36 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
+const HEAD_NAV = [
+  { to: '/headteacher', label: 'Dashboard', end: true },
+  { to: '/headteacher/weekly-brief', label: 'Weekly Brief' },
+  { to: '/headteacher/reviews', label: 'Lesson Reviews' },
+  { to: '/headteacher/coverage', label: 'Coverage Overview' },
+  { to: '/headteacher/participation', label: 'Participation' },
+  { to: '/headteacher/notices', label: 'Notice Board' },
+];
+
 const NAV = {
   TEACHER: [
     { to: '/teacher', label: 'Dashboard', end: true },
     { to: '/teacher/classes', label: 'Classes' },
     { to: '/teacher/lesson-notes', label: 'Lesson Notes' },
     { to: '/teacher/assignments', label: 'Assignments' },
+    { to: '/teacher/syllabus', label: 'Syllabus Coverage' },
+    { to: '/teacher/participation', label: 'Participation Log' },
+    { to: '/teacher/notices', label: 'Notice Board' },
   ],
   STUDENT: [
     { to: '/student', label: 'Dashboard', end: true },
     { to: '/student/classes', label: 'My Classes' },
     { to: '/student/lessons', label: 'Lessons' },
     { to: '/student/assignments', label: 'Assignments' },
+    { to: '/student/notices', label: 'Notice Board' },
+    { to: '/student/feedback', label: 'My Feedback' },
+    { to: '/student/participation', label: 'My Participation' },
   ],
-  HEADTEACHER: [
-    { to: '/headteacher', label: 'Dashboard', end: true },
-    { to: '/headteacher/reviews', label: 'Lesson Reviews' },
-  ],
-  ADMIN: [
-    { to: '/headteacher', label: 'Dashboard', end: true },
-    { to: '/headteacher/reviews', label: 'Lesson Reviews' },
-  ],
+  HEADTEACHER: HEAD_NAV,
+  ADMIN: HEAD_NAV,
 };
 
 const ROLE_LABEL = {

@@ -9,6 +9,10 @@ import assignmentRoutes from './routes/assignments.js';
 import submissionRoutes from './routes/submissions.js';
 import questionRoutes from './routes/questions.js';
 import dashboardRoutes from './routes/dashboard.js';
+import noticeRoutes from './routes/notices.js';
+import syllabusRoutes from './routes/syllabus.js';
+import participationRoutes from './routes/participation.js';
+import reportRoutes from './routes/reports.js';
 
 const app = express();
 
@@ -26,6 +30,10 @@ app.use('/api/assignments', assignmentRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api', questionRoutes); // /api/lessons/:id/questions, /api/questions/:id/reply
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/notices', noticeRoutes);
+app.use('/api/syllabus', syllabusRoutes);
+app.use('/api/participation', participationRoutes);
+app.use('/api/reports', reportRoutes);
 
 // Fallback 404 for unknown API routes
 app.use('/api', (req, res) => {

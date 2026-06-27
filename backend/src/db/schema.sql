@@ -1,6 +1,11 @@
 -- ClassBridge Ghana - database schema
 -- Safe to re-run: drops and recreates everything.
 
+-- Phase 2 tables (drop first due to FK dependencies)
+DROP TABLE IF EXISTS class_participation CASCADE;
+DROP TABLE IF EXISTS syllabus_topics CASCADE;
+DROP TABLE IF EXISTS notices CASCADE;
+
 DROP TABLE IF EXISTS question_replies CASCADE;
 DROP TABLE IF EXISTS lesson_questions CASCADE;
 DROP TABLE IF EXISTS submissions CASCADE;
@@ -140,6 +145,54 @@ CREATE TABLE question_replies (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- ============================================================
+-- Phase 2: Notice Board, Syllabus Coverage, Participation
+-- ============================================================
+
+CREATE TABLE notices (
+  id SERIAL PRIMARY KEY,
+  school_id INTEGER REFERENCES schools(id) ON DELETE CASCADE,
+  class_id INTEGER REFERENCES classes(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  audience TEXT NOT NULL CHECK (audience IN ('ALL', 'TEACHERS', 'STUDENTS', 'CLASS')),
+  posted_by INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  is_pinned BOOLEAN NOT NULL DEFAULT FALSE,
+  expires_at DATE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE syllabus_topics (
+  id SERIAL PRIMARY KEY,
+  class_id INTEGER NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+  teacher_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  subject TEXT NOT NULL,
+  term TEXT NOT NULL,
+  week_number INTEGER NOT NULL DEFAULT 1,
+  topic TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'NOT_STARTED'
+    CHECK (status IN ('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED', 'BEHIND')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE class_participation (
+  id SERIAL PRIMARY KEY,
+  class_id INTEGER NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+  lesson_note_id INTEGER REFERENCES lesson_notes(id) ON DELETE SET NULL,
+  student_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  teacher_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  participation_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  status TEXT NOT NULL CHECK (status IN (
+    'PRESENT_ACTIVE', 'PRESENT_QUIET', 'ABSENT', 'NEEDS_SUPPORT'
+  )),
+  comment TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (class_id, student_id, participation_date)
+);
+
 CREATE INDEX idx_classes_teacher ON classes(teacher_id);
 CREATE INDEX idx_class_students_student ON class_students(student_id);
 CREATE INDEX idx_lesson_notes_class ON lesson_notes(class_id);
@@ -147,3 +200,13 @@ CREATE INDEX idx_lesson_notes_status ON lesson_notes(status);
 CREATE INDEX idx_assignments_class ON assignments(class_id);
 CREATE INDEX idx_submissions_assignment ON submissions(assignment_id);
 CREATE INDEX idx_questions_lesson ON lesson_questions(lesson_note_id);
+
+CREATE INDEX idx_notices_school ON notices(school_id);
+CREATE INDEX idx_notices_class ON notices(class_id);
+CREATE INDEX idx_notices_audience ON notices(audience);
+CREATE INDEX idx_syllabus_class ON syllabus_topics(class_id);
+CREATE INDEX idx_syllabus_teacher ON syllabus_topics(teacher_id);
+CREATE INDEX idx_syllabus_status ON syllabus_topics(status);
+CREATE INDEX idx_participation_class ON class_participation(class_id);
+CREATE INDEX idx_participation_student ON class_participation(student_id);
+CREATE INDEX idx_participation_date ON class_participation(participation_date);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import api, { apiError } from '../../api/client.js';
 import {
   PageHeader,
@@ -78,7 +78,14 @@ export default function ReviewLessonNote() {
       <PageHeader
         title={note.topic}
         subtitle={`${note.class_name} · ${note.teacher_name || ''}`}
-        action={<StatusBadge status={note.status} />}
+        action={
+          <div className="flex items-center gap-2">
+            <StatusBadge status={note.status} />
+            <Link to={`/lesson-notes/${id}/print`} className="btn-secondary">
+              Print
+            </Link>
+          </div>
+        }
       />
 
       {error && (

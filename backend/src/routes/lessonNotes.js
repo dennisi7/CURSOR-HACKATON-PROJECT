@@ -160,10 +160,12 @@ async function insertAllocations(client, lessonId, allocations) {
 router.get('/:id', authRequired, async (req, res, next) => {
   try {
     const result = await query(
-      `SELECT l.*, c.name AS class_name, c.teacher_id, u.name AS teacher_name
+      `SELECT l.*, c.name AS class_name, c.teacher_id, u.name AS teacher_name,
+              sch.name AS school_name
        FROM lesson_notes l
        JOIN classes c ON c.id = l.class_id
        JOIN users u ON u.id = l.teacher_id
+       LEFT JOIN schools sch ON sch.id = c.school_id
        WHERE l.id = $1`,
       [req.params.id]
     );

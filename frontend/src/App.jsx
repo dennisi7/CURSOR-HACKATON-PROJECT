@@ -26,6 +26,16 @@ import StudentAssignmentDetail from './pages/student/StudentAssignmentDetail.jsx
 import HeadteacherDashboard from './pages/headteacher/HeadteacherDashboard.jsx';
 import Reviews from './pages/headteacher/Reviews.jsx';
 import ReviewLessonNote from './pages/headteacher/ReviewLessonNote.jsx';
+import WeeklyBrief from './pages/headteacher/WeeklyBrief.jsx';
+import CoverageOverview from './pages/headteacher/CoverageOverview.jsx';
+import ParticipationOverview from './pages/headteacher/ParticipationOverview.jsx';
+
+import SyllabusCoverage from './pages/teacher/SyllabusCoverage.jsx';
+import ParticipationLog from './pages/teacher/ParticipationLog.jsx';
+import StudentMyParticipation from './pages/student/MyParticipation.jsx';
+import StudentMyFeedback from './pages/student/MyFeedback.jsx';
+import NoticeBoard from './pages/NoticeBoard.jsx';
+import LessonNotePrint from './pages/LessonNotePrint.jsx';
 
 function RoleLayout({ roles, children }) {
   return (
@@ -129,6 +139,30 @@ export default function App() {
           </RoleLayout>
         }
       />
+      <Route
+        path="/teacher/syllabus"
+        element={
+          <RoleLayout roles={['TEACHER']}>
+            <SyllabusCoverage />
+          </RoleLayout>
+        }
+      />
+      <Route
+        path="/teacher/participation"
+        element={
+          <RoleLayout roles={['TEACHER']}>
+            <ParticipationLog />
+          </RoleLayout>
+        }
+      />
+      <Route
+        path="/teacher/notices"
+        element={
+          <RoleLayout roles={['TEACHER']}>
+            <NoticeBoard />
+          </RoleLayout>
+        }
+      />
 
       {/* Student */}
       <Route
@@ -179,6 +213,30 @@ export default function App() {
           </RoleLayout>
         }
       />
+      <Route
+        path="/student/notices"
+        element={
+          <RoleLayout roles={['STUDENT']}>
+            <NoticeBoard />
+          </RoleLayout>
+        }
+      />
+      <Route
+        path="/student/feedback"
+        element={
+          <RoleLayout roles={['STUDENT']}>
+            <StudentMyFeedback />
+          </RoleLayout>
+        }
+      />
+      <Route
+        path="/student/participation"
+        element={
+          <RoleLayout roles={['STUDENT']}>
+            <StudentMyParticipation />
+          </RoleLayout>
+        }
+      />
 
       {/* Headteacher / Admin */}
       <Route
@@ -203,6 +261,48 @@ export default function App() {
           <RoleLayout roles={['HEADTEACHER', 'ADMIN']}>
             <ReviewLessonNote />
           </RoleLayout>
+        }
+      />
+      <Route
+        path="/headteacher/weekly-brief"
+        element={
+          <RoleLayout roles={['HEADTEACHER', 'ADMIN']}>
+            <WeeklyBrief />
+          </RoleLayout>
+        }
+      />
+      <Route
+        path="/headteacher/coverage"
+        element={
+          <RoleLayout roles={['HEADTEACHER', 'ADMIN']}>
+            <CoverageOverview />
+          </RoleLayout>
+        }
+      />
+      <Route
+        path="/headteacher/participation"
+        element={
+          <RoleLayout roles={['HEADTEACHER', 'ADMIN']}>
+            <ParticipationOverview />
+          </RoleLayout>
+        }
+      />
+      <Route
+        path="/headteacher/notices"
+        element={
+          <RoleLayout roles={['HEADTEACHER', 'ADMIN']}>
+            <NoticeBoard />
+          </RoleLayout>
+        }
+      />
+
+      {/* Shared printable lesson note (no main layout/sidebar) */}
+      <Route
+        path="/lesson-notes/:id/print"
+        element={
+          <ProtectedRoute roles={['TEACHER', 'HEADTEACHER', 'ADMIN']}>
+            <LessonNotePrint />
+          </ProtectedRoute>
         }
       />
 

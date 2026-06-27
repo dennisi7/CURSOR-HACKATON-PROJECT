@@ -36,3 +36,16 @@
     @apply rounded-xl border border-gray-200 bg-white p-4 shadow-sm;
   }
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+  .print-page {
+    max-width: 100%;
+    padding: 0;
+  }
+}

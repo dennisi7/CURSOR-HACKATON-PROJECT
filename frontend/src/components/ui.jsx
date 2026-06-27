@@ -8,6 +8,16 @@ export function StatusBadge({ status }) {
     NEEDS_CORRECTION: 'bg-red-100 text-red-800',
     PUBLISHED: 'bg-blue-100 text-blue-800',
     MARKED: 'bg-green-100 text-green-800',
+    // Syllabus statuses
+    NOT_STARTED: 'bg-gray-100 text-gray-700',
+    IN_PROGRESS: 'bg-blue-100 text-blue-800',
+    COMPLETED: 'bg-green-100 text-green-800',
+    BEHIND: 'bg-red-100 text-red-800',
+    // Participation statuses
+    PRESENT_ACTIVE: 'bg-green-100 text-green-800',
+    PRESENT_QUIET: 'bg-blue-100 text-blue-800',
+    ABSENT: 'bg-red-100 text-red-800',
+    NEEDS_SUPPORT: 'bg-amber-100 text-amber-800',
   };
   const label = (status || '').replace(/_/g, ' ');
   return (
@@ -18,6 +28,45 @@ export function StatusBadge({ status }) {
     >
       {label || 'UNKNOWN'}
     </span>
+  );
+}
+
+export function AudienceBadge({ audience }) {
+  const map = {
+    ALL: 'bg-purple-100 text-purple-800',
+    TEACHERS: 'bg-blue-100 text-blue-800',
+    STUDENTS: 'bg-green-100 text-green-800',
+    CLASS: 'bg-amber-100 text-amber-800',
+  };
+  return (
+    <span
+      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+        map[audience] || 'bg-gray-100 text-gray-700'
+      }`}
+    >
+      {audience || 'ALL'}
+    </span>
+  );
+}
+
+export function ProgressBar({ percent, showLabel = true }) {
+  const value = Math.max(0, Math.min(100, Number(percent) || 0));
+  const color =
+    value >= 75 ? 'bg-green-500' : value >= 50 ? 'bg-amber-500' : 'bg-red-500';
+  return (
+    <div>
+      <div className="h-2.5 w-full overflow-hidden rounded-full bg-gray-200">
+        <div
+          className={`h-full rounded-full ${color} transition-all`}
+          style={{ width: `${value}%` }}
+        />
+      </div>
+      {showLabel && (
+        <p className="mt-1 text-right text-xs font-medium text-gray-500">
+          {value}%
+        </p>
+      )}
+    </div>
   );
 }
 
