@@ -1,0 +1,20 @@
+{
+  "name": "classbridge-ghana",
+  "version": "1.0.0",
+  "description": "ClassBridge Ghana - mobile-first school workflow platform (root runner)",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:setup": "npm --prefix backend run db:setup",
+    "setup": "npm run install:all && npm run db:up && wait-on tcp:5432 && npm run db:setup",
+    "dev": "concurrently -n \"API,WEB\" -c \"green,cyan\" \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "start:backend": "npm --prefix backend run dev",
+    "start:frontend": "npm --prefix frontend run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0"
+  }
+}
